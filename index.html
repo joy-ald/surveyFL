@@ -1,38 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FSU & FIU Survey Map</title>
+  <meta charset="utf-8" />
+  <title>Leaflet University Stats Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Leaflet CSS -->
- <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-  
-  <!-- <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+4GdF+0xQ8U+dOPr9fjIucah6XzDElN04z6DgsXk8="
-    crossorigin=""
-  />-->!
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
-  <!-- Your custom CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+    .tooltip-content {
+      line-height: 1.4;
+      font-size: 13px;
+    }
+    .tooltip-content strong {
+      font-size: 14px;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <h2>FSU & FIU Survey Map</h2>
+
   <div id="map"></div>
 
   <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-Y9z5t2rjWr+wKk/s8uQ/vKpBqp5JTF0G9TE+My2kGpI="
-    crossorigin=""
-  ></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Your custom JS -->
-  <script src="script.js"></script>
+  <script>
+    // Initialize map
+    var map = L.map('map').setView([39.8283, -98.5795], 4); // Centered on US
+
+    // Add tile layer
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // University data: [name, lat, lng, undergrad %, grad %]
+    var universities = [
+      ["UC Berkeley", 37.8719, -122.2585, 70, 30],
+      ["MIT", 42.3601, -71.0942, 45, 55],
+      ["UT Austin", 30.2849, -97.7341, 75, 25]
+    ];
+
+    // Add markers with tooltips
+    universities.forEach(([name, lat, lng, undergrad, grad]) => {
+      var tooltip = `
+        <div class="tooltip-content">
+          <strong>${name}</strong>
+          Undergraduate: ${undergrad}%<br>
+          Graduate: ${grad}%
+        </div>
+      `;
+      L.marker([lat, lng])
+        .addTo(map)
+        .bindTooltip(tooltip, {
+          direction: 'top',
+          opacity: 0.9
+        });
+    });
+  </script>
+
 </body>
 </html>
